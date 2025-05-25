@@ -371,7 +371,7 @@ const LocalAnaestheticCalculator = () => {
             <thead className="table-header">
               <tr>
                 <th className="table-header-cell table-header-cell-left">Anaesthetic</th>
-                <th className="table-header-cell table-header-cell-right">Remaining (mg)</th>
+                <th className="table-header-cell table-header-cell-right">Dose (mg)</th>
                 <th className="table-header-cell table-header-cell-right">Volume (ml) at {selectedPercentage}%</th>
               </tr>
             </thead>

@@ -14,7 +14,7 @@
 
 /* Warning popup */
 .warning-popup {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -23,9 +23,8 @@
   padding: 12px;
   text-align: center;
   font-weight: bold;
-  z-index: 10;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Main title */
@@ -45,7 +44,7 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #1d4ed8;
+  color: #1e40af;
 }
 
 /* Weight input section */
@@ -137,6 +136,27 @@
 
 .input-group-button {
   flex: 0 0 auto;
+}
+
+/* When inputs wrap to new lines, make button full width */
+@media (max-width: 600px) {
+  .input-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .input-group,
+  .input-group-narrow,
+  .input-group-button {
+    flex: 1 1 auto;
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .add-button {
+    width: 100%;
+    margin-top: 8px;
+  }
 }
 
 .input-label {
@@ -314,19 +334,6 @@
     margin: 0 8px;
   }
   
-  .input-form {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .input-group,
-  .input-group-narrow,
-  .input-group-button {
-    flex: 1 1 auto;
-    min-width: auto;
-    width: 100%;
-  }
-  
   .main-title {
     font-size: 20px;
   }
@@ -343,12 +350,12 @@
   }
   
   .main-title {
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
   }
   
   .section-title {
-    font-size: 16px;
+    font-size: 18px;
   }
   
   .input-form {
@@ -359,12 +366,12 @@
   .select-field,
   .add-button {
     height: 44px; /* Larger touch targets for mobile */
-    font-size: 16px;
+    font-size: 18px;
   }
   
   .weight-input {
     height: 44px;
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -375,7 +382,7 @@
   }
   
   .table-container {
-    font-size: 14px;
+    font-size: 16px;
   }
   
   .table-header-cell,
