@@ -1,0 +1,350 @@
+/* Local Anaesthetic Calculator Styles */
+
+.calculator-container {
+    background-color: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-width: 768px;
+    position: relative;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0 auto;
+  }
+  
+  /* Warning popup */
+  .warning-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ef4444;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  /* Main title */
+  .main-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #1e40af;
+  }
+  
+  /* Section styles */
+  .section {
+    margin-bottom: 24px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1d4ed8;
+  }
+  
+  /* Weight input section */
+  .weight-label {
+    display: block;
+    color: #374151;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .weight-input {
+    margin-top: 4px;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .weight-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  /* Used doses section */
+  .used-doses-list {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #f9fafb;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .used-doses-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .used-doses-ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .used-dose-item {
+    color: #374151;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  
+  .remove-button {
+    margin-left: 8px;
+    padding: 4px 8px;
+    font-size: 14px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .remove-button:hover {
+    background-color: #dc2626;
+  }
+  
+  /* Input form styles */
+  .input-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: end;
+  }
+  
+  .input-group {
+    flex: 1 1 200px;
+    min-width: 200px;
+  }
+  
+  .input-group-narrow {
+    flex: 1 1 150px;
+    min-width: 150px;
+  }
+  
+  .input-group-button {
+    flex: 0 0 auto;
+  }
+  
+  .input-label {
+    display: block;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  
+  .input-field {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .select-field {
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: white;
+  }
+  
+  .select-field:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  .add-button {
+    background-color: #2563eb;
+    color: white;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    height: 40px;
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+  
+  .add-button:hover:not(:disabled) {
+    background-color: #1d4ed8;
+  }
+  
+  .add-button:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+  }
+  
+  /* Percentage selector */
+  .percentage-label {
+    display: block;
+    color: #374151;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .percentage-select {
+    margin-left: 8px;
+    padding: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+  }
+  
+  .percentage-select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  /* Results table */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .results-table {
+    width: 100%;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-collapse: collapse;
+  }
+  
+  .table-header {
+    background-color: #f3f4f6;
+  }
+  
+  .table-header-cell {
+    padding: 8px;
+    border-bottom: 1px solid #d1d5db;
+    font-weight: 600;
+  }
+  
+  .table-header-cell-left {
+    text-align: left;
+  }
+  
+  .table-header-cell-right {
+    text-align: right;
+  }
+  
+  .table-row {
+    transition: background-color 0.2s;
+  }
+  
+  .table-row:hover {
+    background-color: #f9fafb;
+  }
+  
+  .table-cell {
+    padding: 8px;
+    border-bottom: 1px solid #d1d5db;
+  }
+  
+  .table-cell-right {
+    text-align: right;
+  }
+  
+  /* Disclaimer section */
+  .disclaimer-section {
+    margin-top: 32px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+  }
+  
+  .disclaimer-title {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    margin-top: 0;
+  }
+  
+  .disclaimer-text {
+    margin-bottom: 16px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-top: 0;
+  }
+  
+  .references-list {
+    padding-left: 20px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  .reference-item {
+    margin-bottom: 4px;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .calculator-container {
+      padding: 16px;
+      margin: 8px;
+    }
+    
+    .input-form {
+      flex-direction: column;
+    }
+    
+    .input-group,
+    .input-group-narrow,
+    .input-group-button {
+      flex: 1 1 auto;
+      min-width: auto;
+    }
+    
+    .main-title {
+      font-size: 20px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .calculator-container {
+      padding: 12px;
+      margin: 4px;
+    }
+    
+    .table-container {
+      font-size: 14px;
+    }
+    
+    .table-header-cell,
+    .table-cell {
+      padding: 6px 4px;
+    }
+  }
