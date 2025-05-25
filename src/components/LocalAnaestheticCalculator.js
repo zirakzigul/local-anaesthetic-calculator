@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './LocalAnaestheticCalculator.css';
 
 const LocalAnaestheticCalculator = () => {
@@ -53,21 +53,20 @@ const LocalAnaestheticCalculator = () => {
   const [selectedDrug, setSelectedDrug] = useState('lidocaine');
   const [inputDose, setInputDose] = useState('');
   const [inputVolume, setInputVolume] = useState('');
-  const [maxDoses, setMaxDoses] = useState({});
   const [remainingDoses, setRemainingDoses] = useState({});
   const [selectedPercentage, setSelectedPercentage] = useState(1);
   const [showWarning, setShowWarning] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
 
   // Calculate max doses based on weight
-  const calculateMaxDose = (weight) => {
+  const calculateMaxDose = useCallback((weight) => {
     const dose = {};
     for (const [name, value] of Object.entries(ratios)) {
       const dose_mg = value * weight;
       dose[name] = dose_mg;
     }
     return dose;
-  };
+  }, [ratios]);
 
   // Convert dose in mg to volume in ml
   const doseToMl = (dose, percentage) => {
@@ -75,7 +74,7 @@ const LocalAnaestheticCalculator = () => {
   };
 
   // Calculate remaining doses based on what's been used
-  const calculateRemaining = (weight, used) => {
+  const calculateRemaining = useCallback((weight, used) => {
     const max_dose = calculateMaxDose(weight);
     
     // Calculate the percentage of the total max dose each value represents
@@ -108,7 +107,7 @@ const LocalAnaestheticCalculator = () => {
       }
     }
     return remainingDose;
-  };
+  }, [calculateMaxDose, absoluteMaxDoses]);
 
   // Handle weight input change
   const handleWeightChange = (e) => {
@@ -225,11 +224,9 @@ const LocalAnaestheticCalculator = () => {
 
   // Update calculations when weight or used doses change
   useEffect(() => {
-    const max = calculateMaxDose(weight);
-    setMaxDoses(max);
     const remaining = calculateRemaining(weight, used);
     setRemainingDoses(remaining);
-  }, [weight, used]);
+  }, [weight, used, calculateRemaining]);
   
   // Update calculated value when percentage changes
   useEffect(() => {
