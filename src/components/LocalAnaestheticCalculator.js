@@ -46,7 +46,7 @@ const INITIAL_USED_STATE = {
 
 const LocalAnaestheticCalculator = () => {
   // State hooks
-  const [weight, setWeight] = useState(70);
+  const [weight, setWeight] = useState('');
   const [used, setUsed] = useState(INITIAL_USED_STATE);
   const [usedList, setUsedList] = useState([]);
   const [selectedDrug, setSelectedDrug] = useState('lidocaine');
@@ -121,16 +121,29 @@ const LocalAnaestheticCalculator = () => {
 
   // Handle weight input change
   const handleWeightChange = useCallback((e) => {
-    // Limit weight between 1 and 150
-    let newWeight = parseFloat(e.target.value) || 0;
-    newWeight = Math.min(Math.max(newWeight, 1), 150);
+    const inputValue = e.target.value;
     
-    // Only actually change weight if it's at least 1
-    if (newWeight >= 1) {
-      setWeight(newWeight);
+    // Allow empty input (for placeholder visibility)
+    if (inputValue === '') {
+      setWeight('');
+      return;
+    }
+    
+    // Parse and validate the weight
+    const newWeight = parseFloat(inputValue);
+    
+    // Check if it's a valid number
+    if (isNaN(newWeight)) {
+      return; // Don't update if not a valid number
+    }
+    
+    // Clamp weight between 1 and 150
+    const clampedWeight = Math.min(Math.max(newWeight, 1), 150);
+    
+    // Update weight and reset calculator if weight is valid
+    if (clampedWeight >= 1) {
+      setWeight(clampedWeight);
       resetCalculator();
-    } else {
-      setWeight(1);
     }
   }, [resetCalculator]);
 
@@ -211,8 +224,14 @@ const LocalAnaestheticCalculator = () => {
 
   // Update calculations when weight or used doses change
   useEffect(() => {
-    const remaining = calculateRemaining(weight, used);
-    setRemainingDoses(remaining);
+    // Only calculate if we have a valid weight
+    if (weight && !isNaN(parseFloat(weight)) && parseFloat(weight) >= 1) {
+      const remaining = calculateRemaining(parseFloat(weight), used);
+      setRemainingDoses(remaining);
+    } else {
+      // Clear remaining doses if no valid weight
+      setRemainingDoses({});
+    }
   }, [weight, used, calculateRemaining]);
   
   // Update calculated value when percentage changes
@@ -251,6 +270,7 @@ const LocalAnaestheticCalculator = () => {
             value={weight}
             onChange={handleWeightChange}
             className="weight-input"
+            placeholder="Enter weight in Kg (1 - 150 Kg)"
             min="1"
             max="150"
           />
@@ -371,7 +391,7 @@ const LocalAnaestheticCalculator = () => {
             <thead className="table-header">
               <tr>
                 <th className="table-header-cell table-header-cell-left">Anaesthetic</th>
-                <th className="table-header-cell table-header-cell-right">Dose (mg)</th>
+                <th className="table-header-cell table-header-cell-right">Remaining (mg)</th>
                 <th className="table-header-cell table-header-cell-right">Volume (ml) at {selectedPercentage}%</th>
               </tr>
             </thead>
