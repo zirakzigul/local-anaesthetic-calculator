@@ -44,7 +44,7 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: #1e40af;
+  color: #1d4ed8;
 }
 
 /* Weight input section */
@@ -292,9 +292,9 @@
   text-align: right;
 }
 
-/* Disclaimer section */
-.disclaimer-section {
-  margin-top: 32px;
+/* Info sections (Disclaimer, How it Works, References) */
+.info-section {
+  margin-top: 16px;
   padding: 16px;
   background-color: #f9fafb;
   border-radius: 4px;
@@ -302,18 +302,48 @@
   font-size: 14px;
 }
 
-.disclaimer-title {
+.info-title {
   font-weight: 600;
   color: #374151;
   margin-bottom: 8px;
   margin-top: 0;
 }
 
-.disclaimer-text {
+.info-text {
   margin-bottom: 16px;
   color: #6b7280;
   line-height: 1.5;
   margin-top: 0;
+}
+
+/* Collapsible sections */
+.collapsible-header {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collapsible-header:hover {
+  color: #1d4ed8;
+}
+
+.collapsible-content {
+  margin-top: 16px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .references-list {
@@ -325,6 +355,25 @@
 
 .reference-item {
   margin-bottom: 4px;
+}
+
+/* How it Works section styles */
+.formula-subtitle {
+  font-weight: 600;
+  color: #1f2937;
+  margin: 16px 0 8px 0;
+  font-size: 15px;
+}
+
+.formula-box {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 12px;
+  margin: 8px 0 12px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #1f2937;
 }
 
 /* Responsive design */
@@ -350,12 +399,12 @@
   }
   
   .main-title {
-    font-size: 20px;
+    font-size: 18px;
     text-align: center;
   }
   
   .section-title {
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .input-form {
@@ -366,12 +415,12 @@
   .select-field,
   .add-button {
     height: 44px; /* Larger touch targets for mobile */
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .weight-input {
     height: 44px;
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -382,7 +431,7 @@
   }
   
   .table-container {
-    font-size: 16px;
+    font-size: 14px;
   }
   
   .table-header-cell,

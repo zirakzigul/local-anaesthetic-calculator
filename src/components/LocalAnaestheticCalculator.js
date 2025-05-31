@@ -56,6 +56,8 @@ const LocalAnaestheticCalculator = () => {
   const [selectedPercentage, setSelectedPercentage] = useState(1);
   const [showWarning, setShowWarning] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showReferences, setShowReferences] = useState(false);
 
   // Calculate max doses based on weight
   const calculateMaxDose = useCallback((weight) => {
@@ -264,13 +266,13 @@ const LocalAnaestheticCalculator = () => {
       {/* Weight input */}
       <div className="section">
         <label className="weight-label">
-          Patient Weight (kg):
+          Ideal Body Weight (kg):
           <input
             type="number"
             value={weight}
             onChange={handleWeightChange}
             className="weight-input"
-            placeholder="Enter weight in Kg (1 - 150 Kg)"
+            placeholder="Type a weight to start (1 - 150 kg)"
             min="1"
             max="150"
           />
@@ -391,19 +393,19 @@ const LocalAnaestheticCalculator = () => {
             <thead className="table-header">
               <tr>
                 <th className="table-header-cell table-header-cell-left">Anaesthetic</th>
-                <th className="table-header-cell table-header-cell-right">Remaining (mg)</th>
+                <th className="table-header-cell table-header-cell-right">Dose (mg)</th>
                 <th className="table-header-cell table-header-cell-right">Volume (ml) at {selectedPercentage}%</th>
               </tr>
             </thead>
             <tbody>
-              {Object.keys(remainingDoses).map(name => (
+              {Object.keys(DISPLAY_NAMES).map(name => (
                 <tr key={name} className="table-row">
                   <td className="table-cell">{DISPLAY_NAMES[name]}</td>
                   <td className="table-cell table-cell-right">
-                    {remainingDoses[name]?.toFixed(1) || 0}
+                    {remainingDoses[name] ? remainingDoses[name].toFixed(1) : '-'}
                   </td>
                   <td className="table-cell table-cell-right">
-                    {doseToMl(remainingDoses[name] || 0, selectedPercentage).toFixed(1)}
+                    {remainingDoses[name] ? doseToMl(remainingDoses[name], selectedPercentage).toFixed(1) : '-'}
                   </td>
                 </tr>
               ))}
@@ -412,31 +414,134 @@ const LocalAnaestheticCalculator = () => {
         </div>
       </div>
       
-      {/* Disclaimer and Citations */}
-      <div className="disclaimer-section">
-        <h3 className="disclaimer-title">Disclaimer</h3>
-        <p className="disclaimer-text">
+      {/* Disclaimer */}
+      <div className="info-section">
+        <h3 className="info-title">Disclaimer</h3>
+        <p className="info-text">
           This calculator is available as a guide only and does not replace clinical discretion. 
           Always calculate the dose based on lean body weight to reduce toxicity risks. 
           For children and elderly patients, maximum doses should generally be halved.
         </p>
+      </div>
+      
+      {/* How it Works - Collapsible */}
+      <div className="info-section">
+        <h3 className="info-title collapsible-header" onClick={() => setShowHowItWorks(!showHowItWorks)}>
+          How it Works {showHowItWorks ? '▼' : '▶'}
+        </h3>
         
-        <h3 className="disclaimer-title">References</h3>
-        <ol className="references-list">
-          <li className="reference-item">
-            French J, Sharp LM. Local anaesthetics. Ann R Coll Surg Engl. 2012 Mar;94(2):76-80. 
-            doi: 10.1308/003588412X13171221502185. PMID: 22391358; PMCID: PMC3954146.
-          </li>
-          <li className="reference-item">
-            Nestor CC, Ng C, Sepulveda P, Irwin MG. Pharmacological and clinical implications of local 
-            anaesthetic mixtures: a narrative review. Anaesthesia. 2022 Mar;77(3):339-350. 
-            doi: 10.1111/anae.15641. Epub 2021 Dec 14. PMID: 34904711.
-          </li>
-          <li className="reference-item">
-            El-Boghdadly K, Pawa A, Chin KJ. Local anesthetic systemic toxicity: current perspectives. 
-            Local Reg Anesth. 2018 Aug 8;11:35-44. doi: 10.2147/LRA.S154512. PMID: 30122981; PMCID: PMC6087022.
-          </li>
-        </ol>
+        {showHowItWorks && (
+          <div className="collapsible-content">
+            <h4 className="formula-subtitle">1. Maximum Allowable Dose Calculation</h4>
+            <div className="formula-box">
+              <strong>Max Dose (mg) = Weight (kg) × Drug-specific ratio (mg/kg)</strong>
+            </div>
+            <p className="info-text">
+              Each local anaesthetic has a maximum safe dose per kilogram of body weight. The calculator multiplies 
+              your patient's weight by the appropriate mg/kg ratio for each drug.
+            </p>
+            
+            <h4 className="formula-subtitle">2. Volume Conversion</h4>
+            <div className="formula-box">
+              <strong>Volume (ml) = Dose (mg) ÷ (Concentration (%) × 10)</strong>
+            </div>
+            <p className="info-text">
+              To convert from milligrams to milliliters, divide the dose by the concentration percentage multiplied by 10. 
+              For example: 50mg of 1% solution = 50 ÷ (1 × 10) = 5ml
+            </p>
+            
+            <h4 className="formula-subtitle">3. Total Anaesthetic Load Calculation</h4>
+            <div className="formula-box">
+              <strong>Total Load (%) = Σ (Used Dose of Agent ÷ Max Dose of Agent) × 100</strong>
+            </div>
+            <p className="info-text">
+              The calculator tracks the total anaesthetic load by calculating what percentage of each drug's maximum 
+              safe dose has been used, then summing these percentages. The remaining safe dose for each agent is 
+              calculated by reducing all maximum doses proportionally based on this total load.
+            </p>
+            
+            <h4 className="formula-subtitle">4. Drug-Specific Ratios (mg/kg)</h4>
+            <div className="table-container">
+              <table className="results-table">
+                <thead className="table-header">
+                  <tr>
+                    <th className="table-header-cell table-header-cell-left">Local Anaesthetic</th>
+                    <th className="table-header-cell table-header-cell-right">Plain (mg/kg)</th>
+                    <th className="table-header-cell table-header-cell-right">Absolute Max (mg)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="table-row">
+                    <td className="table-cell">Lidocaine</td>
+                    <td className="table-cell table-cell-right">3</td>
+                    <td className="table-cell table-cell-right">300</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Lidocaine with Epinephrine</td>
+                    <td className="table-cell table-cell-right">5</td>
+                    <td className="table-cell table-cell-right">500</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Bupivacaine</td>
+                    <td className="table-cell table-cell-right">2</td>
+                    <td className="table-cell table-cell-right">175</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Levobupivacaine</td>
+                    <td className="table-cell table-cell-right">2</td>
+                    <td className="table-cell table-cell-right">No limit</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Ropivacaine</td>
+                    <td className="table-cell table-cell-right">3</td>
+                    <td className="table-cell table-cell-right">200</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Prilocaine</td>
+                    <td className="table-cell table-cell-right">6</td>
+                    <td className="table-cell table-cell-right">400</td>
+                  </tr>
+                  <tr className="table-row">
+                    <td className="table-cell">Mepivacaine</td>
+                    <td className="table-cell table-cell-right">4.4</td>
+                    <td className="table-cell table-cell-right">350</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="info-text">
+              <strong>Note:</strong> The calculator uses the lower of either the weight-based maximum or the absolute 
+              maximum dose limit (where applicable) to ensure patient safety.
+            </p>
+          </div>
+        )}
+      </div>
+      
+      {/* References - Collapsible */}
+      <div className="info-section">
+        <h3 className="info-title collapsible-header" onClick={() => setShowReferences(!showReferences)}>
+          References {showReferences ? '▼' : '▶'}
+        </h3>
+        
+        {showReferences && (
+          <div className="collapsible-content">
+            <ol className="references-list">
+              <li className="reference-item">
+                French J, Sharp LM. Local anaesthetics. Ann R Coll Surg Engl. 2012 Mar;94(2):76-80. 
+                doi: 10.1308/003588412X13171221502185. PMID: 22391358; PMCID: PMC3954146.
+              </li>
+              <li className="reference-item">
+                Nestor CC, Ng C, Sepulveda P, Irwin MG. Pharmacological and clinical implications of local 
+                anaesthetic mixtures: a narrative review. Anaesthesia. 2022 Mar;77(3):339-350. 
+                doi: 10.1111/anae.15641. Epub 2021 Dec 14. PMID: 34904711.
+              </li>
+              <li className="reference-item">
+                El-Boghdadly K, Pawa A, Chin KJ. Local anesthetic systemic toxicity: current perspectives. 
+                Local Reg Anesth. 2018 Aug 8;11:35-44. doi: 10.2147/LRA.S154512. PMID: 30122981; PMCID: PMC6087022.
+              </li>
+            </ol>
+          </div>
+        )}
       </div>
     </div>
   );
