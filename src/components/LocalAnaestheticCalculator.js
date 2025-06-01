@@ -433,6 +433,19 @@ const LocalAnaestheticCalculator = () => {
         
         {showHowItWorks && (
           <div className="collapsible-content">
+            <h4 className="formula-subtitle">Instructions:</h4>
+            <p className="info-text">
+              - Begin by typing the patient's ideal body weight. The calculator will then present the remaining recommended safe dose and volume for each anaesthetic agent. 
+            </p>
+            <p className="info-text">
+              - The concentration of the solution can be adjusted using the drop down menu.
+            </p>
+            <p className="info-text">
+              - Add the doses you have already used or plan to use and the calculator will adjust the respective remaining values.
+            </p>
+            
+            <h4 className="formula-subtitle">Methodology:</h4>
+            
             <h4 className="formula-subtitle">1. Maximum Allowable Dose Calculation</h4>
             <div className="formula-box">
               <strong>Max Dose (mg) = Weight (kg) × Drug-specific ratio (mg/kg)</strong>
