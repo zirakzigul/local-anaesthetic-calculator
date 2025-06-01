@@ -377,6 +377,44 @@
   color: #1f2937;
 }
 
+/* External Links section styles */
+.external-links-list {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.external-link-item {
+  margin-bottom: 8px;
+}
+
+.external-link {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.external-link:hover {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.external-link:visited {
+  color: #7c3aed;
+}
+
+/* Last updated section */
+.last-updated {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  font-style: italic;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .calculator-container {

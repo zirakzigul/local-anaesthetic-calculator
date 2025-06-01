@@ -58,6 +58,7 @@ const LocalAnaestheticCalculator = () => {
   const [activeInput, setActiveInput] = useState(null);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [showReferences, setShowReferences] = useState(false);
+  const [showExternalLinks, setShowExternalLinks] = useState(false);
 
   // Calculate max doses based on weight
   const calculateMaxDose = useCallback((weight) => {
@@ -446,7 +447,7 @@ const LocalAnaestheticCalculator = () => {
               <strong>Volume (ml) = Dose (mg) ÷ (Concentration (%) × 10)</strong>
             </div>
             <p className="info-text">
-              To convert from milligrams to milliliters, divide the dose by the concentration percentage multiplied by 10. 
+              To convert from milligrams to milliliters, the dose is divided by the concentration multiplied by 10. 
               For example: 50mg of 1% solution = 50 ÷ (1 × 10) = 5ml
             </p>
             
@@ -542,6 +543,35 @@ const LocalAnaestheticCalculator = () => {
             </ol>
           </div>
         )}
+      </div>
+      
+      {/* External Links - Collapsible */}
+      <div className="info-section">
+        <h3 className="info-title collapsible-header" onClick={() => setShowExternalLinks(!showExternalLinks)}>
+          External Links {showExternalLinks ? '▼' : '▶'}
+        </h3>
+        
+        {showExternalLinks && (
+          <div className="collapsible-content">
+            <ul className="external-links-list">
+              <li className="external-link-item">
+                <a 
+                  href="https://anaesthetists.org/Portals/0/PDFs/QRH/QRH_3-10_Local_anaesthetic_toxicity_v2_June%202023.pdf?ver=2023-06-23-141010-760"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="external-link"
+                >
+                  QRH - Management of local anaesthetic toxicity (Updated June 23)
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+      
+      {/* Last Updated */}
+      <div className="last-updated">
+        Last updated: June 1, 2025
       </div>
     </div>
   );
