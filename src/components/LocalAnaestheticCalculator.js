@@ -32,7 +32,7 @@ const DISPLAY_NAMES = {
   mepivacaine: 'Mepivacaine'
 };
 
-const PERCENTAGES = [0.25, 0.5, 1, 2];
+const PERCENTAGES = [0.25, 0.5, 0.75, 1, 2, 4];
 
 const INITIAL_USED_STATE = {
   lidocaine: 0,
