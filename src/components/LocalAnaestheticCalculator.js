@@ -16,7 +16,7 @@ const ABSOLUTE_MAX_DOSES = {
   lidocaine: 300,
   lidocaine_epinephrine: 500,
   bupivacaine: 175,
-  levobupivacaine: 175,
+  levobupivacaine: NaN,
   ropivacaine: 200,
   prilocaine: 400,
   mepivacaine: 350
@@ -267,8 +267,7 @@ const LocalAnaestheticCalculator = () => {
     }
   }, [selectedConcentration, inputDose, inputVolume, activeInput, doseToMl, mlToDose]);
 
-  // Get percentage for display
-  const currentPercentage = getPercentageFromConcentration(selectedConcentration);
+
 
   return (
     <div className="calculator-container">
@@ -605,7 +604,7 @@ const LocalAnaestheticCalculator = () => {
       
       {/* Last Updated */}
       <div className="last-updated">
-        Last updated: June 7, 2025
+        Last updated: June 1, 2025
       </div>
     </div>
   );
