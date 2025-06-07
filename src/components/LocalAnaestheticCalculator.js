@@ -16,7 +16,7 @@ const ABSOLUTE_MAX_DOSES = {
   lidocaine: 300,
   lidocaine_epinephrine: 500,
   bupivacaine: 175,
-  levobupivacaine: NaN,
+  levobupivacaine: 175,
   ropivacaine: 200,
   prilocaine: 400,
   mepivacaine: 350
@@ -32,7 +32,15 @@ const DISPLAY_NAMES = {
   mepivacaine: 'Mepivacaine'
 };
 
-const PERCENTAGES = [0.25, 0.5, 0.75, 1, 2, 4];
+// Updated concentrations in mg/ml with corresponding percentages
+const CONCENTRATIONS = [
+  { mgMl: 2.5, percentage: 0.25 },
+  { mgMl: 5, percentage: 0.5 },
+  { mgMl: 7.5, percentage: 0.75 },
+  { mgMl: 10, percentage: 1 },
+  { mgMl: 20, percentage: 2 },
+  { mgMl: 40, percentage: 4 }
+];
 
 const INITIAL_USED_STATE = {
   lidocaine: 0,
@@ -53,12 +61,18 @@ const LocalAnaestheticCalculator = () => {
   const [inputDose, setInputDose] = useState('');
   const [inputVolume, setInputVolume] = useState('');
   const [remainingDoses, setRemainingDoses] = useState({});
-  const [selectedPercentage, setSelectedPercentage] = useState(1);
+  const [selectedConcentration, setSelectedConcentration] = useState(10); // Default to 10 mg/ml (1%)
   const [showWarning, setShowWarning] = useState(false);
   const [activeInput, setActiveInput] = useState(null);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [showReferences, setShowReferences] = useState(false);
   const [showExternalLinks, setShowExternalLinks] = useState(false);
+
+  // Helper function to get percentage from mg/ml concentration
+  const getPercentageFromConcentration = useCallback((mgMl) => {
+    const concentration = CONCENTRATIONS.find(c => c.mgMl === mgMl);
+    return concentration ? concentration.percentage : mgMl / 10;
+  }, []);
 
   // Calculate max doses based on weight
   const calculateMaxDose = useCallback((weight) => {
@@ -69,14 +83,14 @@ const LocalAnaestheticCalculator = () => {
     return dose;
   }, []);
 
-  // Convert dose in mg to volume in ml
-  const doseToMl = useCallback((dose, percentage) => {
-    return dose / (percentage * 10);
+  // Convert dose in mg to volume in ml using concentration in mg/ml
+  const doseToMl = useCallback((dose, concentrationMgMl) => {
+    return dose / concentrationMgMl;
   }, []);
 
-  // Convert volume in ml to dose in mg
-  const mlToDose = useCallback((ml, percentage) => {
-    return ml * percentage * 10;
+  // Convert volume in ml to dose in mg using concentration in mg/ml
+  const mlToDose = useCallback((ml, concentrationMgMl) => {
+    return ml * concentrationMgMl;
   }, []);
 
   // Calculate remaining doses based on what's been used
@@ -157,12 +171,12 @@ const LocalAnaestheticCalculator = () => {
     
     if (value && !isNaN(parseFloat(value))) {
       const doseValue = parseFloat(value);
-      const rawVolume = doseToMl(doseValue, selectedPercentage);
+      const rawVolume = doseToMl(doseValue, selectedConcentration);
       setInputVolume(rawVolume.toString());
     } else {
       setInputVolume('');
     }
-  }, [doseToMl, selectedPercentage]);
+  }, [doseToMl, selectedConcentration]);
 
   // Handle volume input change and update dose
   const handleVolumeChange = useCallback((value) => {
@@ -171,12 +185,12 @@ const LocalAnaestheticCalculator = () => {
     
     if (value && !isNaN(parseFloat(value))) {
       const volumeValue = parseFloat(value);
-      const rawDose = mlToDose(volumeValue, selectedPercentage);
+      const rawDose = mlToDose(volumeValue, selectedConcentration);
       setInputDose(rawDose.toString());
     } else {
       setInputDose('');
     }
-  }, [mlToDose, selectedPercentage]);
+  }, [mlToDose, selectedConcentration]);
 
   // Add the current drug and dose to the used list
   const addUsedDose = useCallback(() => {
@@ -193,6 +207,7 @@ const LocalAnaestheticCalculator = () => {
     }
     
     const volume = parseFloat(inputVolume);
+    const percentage = getPercentageFromConcentration(selectedConcentration);
     const newUsedList = [
       ...usedList,
       {
@@ -200,7 +215,8 @@ const LocalAnaestheticCalculator = () => {
         displayName: DISPLAY_NAMES[selectedDrug],
         dose: dose,
         volume: volume,
-        percentage: selectedPercentage
+        concentrationMgMl: selectedConcentration,
+        percentage: percentage
       }
     ];
     setUsedList(newUsedList);
@@ -212,7 +228,7 @@ const LocalAnaestheticCalculator = () => {
     setInputDose('');
     setInputVolume('');
     setActiveInput(null);
-  }, [inputDose, inputVolume, remainingDoses, selectedDrug, usedList, used, selectedPercentage]);
+  }, [inputDose, inputVolume, remainingDoses, selectedDrug, usedList, used, selectedConcentration, getPercentageFromConcentration]);
   
   // Remove a dose from the used list
   const removeDose = useCallback((index) => {
@@ -237,19 +253,22 @@ const LocalAnaestheticCalculator = () => {
     }
   }, [weight, used, calculateRemaining]);
   
-  // Update calculated value when percentage changes
+  // Update calculated value when concentration changes
   useEffect(() => {
     if (inputDose && !isNaN(parseFloat(inputDose))) {
       if (activeInput === 'dose' || activeInput === null) {
-        const volume = doseToMl(parseFloat(inputDose), selectedPercentage);
+        const volume = doseToMl(parseFloat(inputDose), selectedConcentration);
         setInputVolume(volume.toString());
       } 
       else if (activeInput === 'volume' && inputVolume && !isNaN(parseFloat(inputVolume))) {
-        const dose = mlToDose(parseFloat(inputVolume), selectedPercentage);
+        const dose = mlToDose(parseFloat(inputVolume), selectedConcentration);
         setInputDose(dose.toString());
       }
     }
-  }, [selectedPercentage, inputDose, inputVolume, activeInput, doseToMl, mlToDose]);
+  }, [selectedConcentration, inputDose, inputVolume, activeInput, doseToMl, mlToDose]);
+
+  // Get percentage for display
+  const currentPercentage = getPercentageFromConcentration(selectedConcentration);
 
   return (
     <div className="calculator-container">
@@ -292,7 +311,7 @@ const LocalAnaestheticCalculator = () => {
               {usedList.map((item, index) => (
                 <li key={index} className="used-dose-item">
                   <span>
-                    {item.displayName}: {item.dose.toFixed(1)} mg ({item.volume.toFixed(1)} ml of {item.percentage}%)
+                    {item.displayName}: {item.dose.toFixed(1)} mg ({item.volume.toFixed(1)} ml of {item.concentrationMgMl} mg/ml)
                   </span>
                   <button 
                     onClick={() => removeDose(index)}
@@ -344,7 +363,7 @@ const LocalAnaestheticCalculator = () => {
           {/* Volume input */}
           <div className="input-group-narrow">
             <label className="input-label">
-              Volume at {selectedPercentage}% (ml)
+              Volume (ml) at {selectedConcentration} mg/ml
             </label>
             <input
               type="text"
@@ -370,17 +389,19 @@ const LocalAnaestheticCalculator = () => {
         </div>
       </div>
       
-      {/* Percentage selector */}
+      {/* Concentration selector */}
       <div className="section">
         <label className="percentage-label">
-          Select Concentration (%):
+          Select Concentration:
           <select
-            value={selectedPercentage}
-            onChange={(e) => setSelectedPercentage(parseFloat(e.target.value))}
+            value={selectedConcentration}
+            onChange={(e) => setSelectedConcentration(parseFloat(e.target.value))}
             className="percentage-select"
           >
-            {PERCENTAGES.map(p => (
-              <option key={p} value={p}>{p}</option>
+            {CONCENTRATIONS.map(c => (
+              <option key={c.mgMl} value={c.mgMl}>
+                {c.mgMl} mg/ml ({c.percentage}%)
+              </option>
             ))}
           </select>
         </label>
@@ -395,7 +416,7 @@ const LocalAnaestheticCalculator = () => {
               <tr>
                 <th className="table-header-cell table-header-cell-left">Anaesthetic</th>
                 <th className="table-header-cell table-header-cell-right">Dose (mg)</th>
-                <th className="table-header-cell table-header-cell-right">Volume (ml) at {selectedPercentage}%</th>
+                <th className="table-header-cell table-header-cell-right">Volume (ml) at {selectedConcentration} mg/ml</th>
               </tr>
             </thead>
             <tbody>
@@ -406,7 +427,7 @@ const LocalAnaestheticCalculator = () => {
                     {remainingDoses[name] ? remainingDoses[name].toFixed(1) : '-'}
                   </td>
                   <td className="table-cell table-cell-right">
-                    {remainingDoses[name] ? doseToMl(remainingDoses[name], selectedPercentage).toFixed(1) : '-'}
+                    {remainingDoses[name] ? doseToMl(remainingDoses[name], selectedConcentration).toFixed(1) : '-'}
                   </td>
                 </tr>
               ))}
@@ -419,8 +440,8 @@ const LocalAnaestheticCalculator = () => {
       <div className="info-section">
         <h3 className="info-title">Disclaimer</h3>
         <p className="info-text">
-          This calculator is available as a guide only and does not replace clinical discretion. 
-          Always calculate the dose based on lean body weight to reduce toxicity risks. 
+          This calculator is available as a guide only and does not replace clinical discretion. It is approapriate for single shot administration and not continuous infusions. 
+          Always calculate the dose based on ideal body weight to reduce toxicity risks. 
           For children and elderly patients, maximum doses should generally be halved.
         </p>
       </div>
@@ -457,11 +478,11 @@ const LocalAnaestheticCalculator = () => {
             
             <h4 className="formula-subtitle">2. Volume Conversion</h4>
             <div className="formula-box">
-              <strong>Volume (ml) = Dose (mg) ÷ (Concentration (%) × 10)</strong>
+              <strong>Volume (ml) = Dose (mg) ÷ Concentration (mg/ml)</strong>
             </div>
             <p className="info-text">
-              To convert from milligrams to milliliters, the dose is divided by the concentration multiplied by 10. 
-              For example: 50mg of 1% solution = 50 ÷ (1 × 10) = 5ml
+              To convert from milligrams to milliliters, the dose is divided by the concentration in mg/ml. 
+              For example: 50mg at 10 mg/ml concentration = 50 ÷ 10 = 5ml
             </p>
             
             <h4 className="formula-subtitle">3. Total Anaesthetic Load Calculation</h4>
@@ -584,7 +605,7 @@ const LocalAnaestheticCalculator = () => {
       
       {/* Last Updated */}
       <div className="last-updated">
-        Last updated: June 1, 2025
+        Last updated: June 7, 2025
       </div>
     </div>
   );
