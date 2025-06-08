@@ -3,6 +3,7 @@
 .calculator-container {
   background-color: white;
   padding: 24px;
+  padding-top: 0px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 768px;
@@ -18,8 +19,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 5px;
-  gap: 2px;
+  margin-bottom: 0px;
+  gap: 0px;
 }
 
 .app-logo {
@@ -49,7 +50,7 @@
   }
   
   .app-header {
-    gap: 2px;
+    gap: 0px;
     margin-bottom: 5px;
   }
 }
