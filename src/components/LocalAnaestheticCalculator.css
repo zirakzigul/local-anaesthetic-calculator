@@ -12,6 +12,48 @@
   box-sizing: border-box;
 }
 
+/* Header with Logo */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 5px;
+  gap: 2px;
+}
+
+.app-logo {
+  width: 30%;
+  max-width: 200px;
+  min-width: 80px;
+  height: auto;
+  flex-shrink: 0;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .app-logo {
+    width: 30%;
+    max-width: 150px;
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-logo {
+    width: 30%;
+    max-width: 120px;
+    min-width: 50px;
+  }
+  
+  .app-header {
+    gap: 2px;
+    margin-bottom: 5px;
+  }
+}
+
 /* Warning popup */
 .warning-popup {
   position: fixed;
@@ -32,7 +74,7 @@
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 18px;
+  margin: 0;
   color: #1e40af;
 }
 

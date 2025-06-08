@@ -52,6 +52,15 @@ const INITIAL_USED_STATE = {
   mepivacaine: 0
 };
 
+// Logo Component using uploaded SVG file
+const LogoIcon = () => (
+  <img 
+    src="logo.svg" 
+    alt="LA Calc Logo" 
+    className="app-logo"
+  />
+);
+
 const LocalAnaestheticCalculator = () => {
   // State hooks
   const [weight, setWeight] = useState('');
@@ -267,8 +276,6 @@ const LocalAnaestheticCalculator = () => {
     }
   }, [selectedConcentration, inputDose, inputVolume, activeInput, doseToMl, mlToDose]);
 
-
-
   return (
     <div className="calculator-container">
       {/* Warning popup */}
@@ -278,9 +285,10 @@ const LocalAnaestheticCalculator = () => {
         </div>
       )}
       
-      <h1 className="main-title">
-        Total Local Anaesthetic Dose Calculator
-      </h1>
+      {/* Header with Logo */}
+      <header className="app-header">
+        <LogoIcon />
+      </header>
       
       {/* Weight input */}
       <div className="section">
