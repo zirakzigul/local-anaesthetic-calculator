@@ -16,7 +16,7 @@ const ABSOLUTE_MAX_DOSES = {
   lidocaine: 300,
   lidocaine_epinephrine: 500,
   bupivacaine: 175,
-  levobupivacaine: NaN,
+  levobupivacaine: 175,
   ropivacaine: 200,
   prilocaine: 400,
   mepivacaine: 350
@@ -531,7 +531,7 @@ const LocalAnaestheticCalculator = () => {
                   <tr className="table-row">
                     <td className="table-cell">Levobupivacaine</td>
                     <td className="table-cell table-cell-right">2</td>
-                    <td className="table-cell table-cell-right">No limit</td>
+                    <td className="table-cell table-cell-right">175</td>
                   </tr>
                   <tr className="table-row">
                     <td className="table-cell">Ropivacaine</td>
@@ -581,6 +581,14 @@ const LocalAnaestheticCalculator = () => {
                 El-Boghdadly K, Pawa A, Chin KJ. Local anesthetic systemic toxicity: current perspectives. 
                 Local Reg Anesth. 2018 Aug 8;11:35-44. doi: 10.2147/LRA.S154512. PMID: 30122981; PMCID: PMC6087022.
               </li>
+              <li className="reference-item">
+                Mets B, Janicki PK, James MF, Erskine R, Sasman B. Lidocaine and bupivacaine cardiorespiratory toxicity is additive: a study in rats. 
+                Anesth Analg. 1992 Oct;75(4):611-4. doi: 10.1213/00000539-199210000-00026. PMID: 1530175.
+                </li>
+              <li className="reference-item">
+                Budney SM, Holcombe TC. A Visual Method for the Safe Administration of Multiple Local Anesthetics. 
+                Plast Reconstr Surg Glob Open. 2019 Jun 19;7(6):e2294. doi: 10.1097/GOX.0000000000002294. PMID: 31624688; PMCID: PMC6635186.
+              </li>
             </ol>
           </div>
         )}
@@ -602,7 +610,7 @@ const LocalAnaestheticCalculator = () => {
                   rel="noopener noreferrer"
                   className="external-link"
                 >
-                  QRH - Management of local anaesthetic toxicity (Updated June 23)
+                  QRH - Management of local anaesthetic toxicity
                 </a>
               </li>
             </ul>
@@ -612,7 +620,7 @@ const LocalAnaestheticCalculator = () => {
       
       {/* Last Updated */}
       <div className="last-updated">
-        Last updated: June 1, 2025
+        Last updated: June 9, 2025
       </div>
     </div>
   );
